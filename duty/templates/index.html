@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>.:: HSCode searches ::.</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        /* CSS to create the divider */
+        .divider-item {
+            position: relative;
+        }
+
+        .divider-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            /* Center vertically */
+            left: 0;
+            transform: translateY(-50%);
+            /* Adjust for perfect vertical centering */
+            width: 1px;
+            /* Width of the divider line */
+            height: 70%;
+            /* Height of the divider */
+            background-color: rgba(255, 255, 255, 0.5);
+            /* Color and opacity of the line */
+            margin-left: -8px;
+            /* Adjust spacing from the previous menu item */
+        }
+
+        /* Optional: adjust padding to make space for the divider */
+        .navbar-nav .nav-item {
+            padding: 0 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'index' %}">Duty rate searches by HSCode</a>
+                    </li>
+                    <li class="nav-item divider-item">
+                        <a class="nav-link" href="{% url 'totalduty' %}">Duty Calculation by HSCode</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container d-flex justify-content-center">
+        <div class="card shadow p-4" style="min-width: 400px; max-width: 600px; width: 100%;">
+            <h2 class="mb-3 text-center">Duty rate searches</h2>
+            <hr />
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.input_text.label_tag }}
+                    {{ form.input_text }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </form>
+
+            {% if hscode %}
+            <div class="mt-4">
+                <table class="table table-success table-striped">
+                    <tr>
+                        <th colspan="2" class="text-center">HSCode Details:</th>
+                    </tr>
+                    <tr>
+                        <th>HSCode:</th>
+                        <td>{{ hscode.hscode }}</td>
+                    </tr>
+                    <tr>
+                        <th>Description:</th>
+                        <td>{{ hscode.tarriff_description }}</td>
+                    </tr>
+                    <tr>
+                        <th>Customs Duty(CD):</th>
+                        <td>{{ hscode.cd }}</td>
+                    </tr>
+                    <tr>
+                        <th>Supplementary Duty(SD):</th>
+                        <td>{{ hscode.sd }}</td>
+                    </tr>
+                    <tr>
+                        <th>Value Added Tax(VAT):</th>
+                        <td>{{ hscode.vat }}</td>
+                    </tr>
+                    <tr>
+                        <th>Regulatory Duty(RD):</th>
+                        <td>{{ hscode.rd }}</td>
+                    </tr>
+                    <tr>
+                        <th>Advanced Tax(AT):</th>
+                        <td>{{ hscode.at }}</td>
+                    </tr>
+                    <tr>
+                        <th>Advanced Income Tax(AIT):</th>
+                        <td>{{ hscode.ait }}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Tax Incidence(TTI):</th>
+                        <td>{{ hscode.tti }}</td>
+                    </tr>
+                </table>
+            </div>
+            {% endif %}
+            {% if output and not hscode %}
+            <div class="mt-4">
+                <label class="form-label text-danger text-center"><strong>{{ output }}</strong></label>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
